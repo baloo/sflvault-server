@@ -17,7 +17,7 @@ setup(
     license='GPLv3',
     install_requires=["Pylons==0.9.7",
                       "SQLAlchemy==0.5.8",
-                      "pysqlite",
+#                      "pysqlite",
                       "simplejson",
                       "SFLvault-common==0.7.8.1",
                       "Routes==1.10.3",
