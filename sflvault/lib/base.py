@@ -82,14 +82,14 @@ def get_session(authtok):
 
     if not content.has_key('timeout'):
         content['timeout'] = datetime.now() + timedelta(0, SESSION_TIMEOUT)
-        mc.engine.set(authok, content)
+        mc.engine.set(authtok, content)
     
     if content['timeout'] < datetime.now():
-        del mc.engine[authok]
+        del mc.engine[authtok]
         return None
 
     if content['remote_addr'] != request.environ.get('REMOTE_ADDR', 'gibberish'):
-        del mc.engine[authok]
+        del mc.engine[authtok]
         return None
 
     return content
