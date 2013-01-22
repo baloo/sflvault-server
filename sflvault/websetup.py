@@ -12,6 +12,7 @@ log = logging.getLogger(__name__)
 def setup_config(command, filename, section, vars):
     """Place any commands to setup sflvault here"""
     conf = appconfig('config:' + filename)
+    conf.global_conf.update(vars)
     load_environment(conf.global_conf, conf.local_conf)
 
     from sflvault import model
