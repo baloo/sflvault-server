@@ -41,10 +41,14 @@ from sflvault.common import VaultError
 
 from base64 import b64decode, b64encode
 
-mc = None
+class Memcache(object):
+   def __init__(self):
+       engine = None
+
+mc = Memcache()
 
 def init_mc(mc_engine):
-    mc = mc_engine
+    mc.engine = mc_engine
 
 # Helper to return messages
 
@@ -66,26 +70,26 @@ def set_session(authtok, value):
     
     """
 
-    mc.set(authok, value)
+    mc.engine.set(str(authtok), value)
 
 def get_session(authtok):
     """Return the values associated with a session"""
 
-    content = mc.get(authtok)
+    content = mc.engine.get(str(authtok))
 
     if not content:
         return None
 
     if not content.has_key('timeout'):
         content['timeout'] = datetime.now() + timedelta(0, SESSION_TIMEOUT)
-        mc.set(authok, content)
+        mc.engine.set(authok, content)
     
     if content['timeout'] < datetime.now():
-        del mc[authok]
+        del mc.engine[authok]
         return None
 
-    if g.vaultSessions[authtok]['remote_addr'] != request.environ.get('REMOTE_ADDR', 'gibberish'):
-        del mc[authok]
+    if content['remote_addr'] != request.environ.get('REMOTE_ADDR', 'gibberish'):
+        del mc.engine[authok]
         return None
 
     return content

@@ -88,7 +88,7 @@ def authenticated_admin(func, self, *args, **kwargs):
     if ret:
         return ret
 
-    if not self.sess['userobj'].is_admin:
+    if not self.sess['user.is_admin']:
         return vaultMsg(False, "Permission denied, admin priv. required")
 
     return func(self, *args, **kwargs)
@@ -166,7 +166,7 @@ class XmlrpcController(XMLRPCController):
             set_session(newtok, {'username': username,
                                  'timeout': datetime.now() + timedelta(0, int(config['sflvault.vault.session_timeout'])),
                                  'remote_addr': request.environ.get('REMOTE_ADDR', None),
-                                 'userobj': u,
+                                 'user.is_admin': u.is_admin,
                                  'user_id': u.id
                                  })
 
