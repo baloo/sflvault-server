@@ -6,6 +6,8 @@ from mako.lookup import TemplateLookup
 from pylons.error import handle_mako_error
 from sqlalchemy import engine_from_config
 from sflvault.model import init_model
+import pylibmc
+from lib.base import init_mc
 
 import sflvault.lib.app_globals as app_globals
 import sflvault.lib.helpers
@@ -42,3 +44,13 @@ def load_environment(global_conf, app_conf):
     # any Pylons config options)
     engine = engine_from_config(config, 'sqlalchemy.')
     init_model(engine)
+
+    mc = pylibmc.Client(
+        servers=config['memcache.servers'],
+        username=config['memcache.username'],
+        password=config['memcache.password'],
+        binary=True
+    )
+    init_mc(mc)
+
+

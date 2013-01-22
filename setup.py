@@ -22,6 +22,7 @@ setup(
                       "SFLvault-common==0.7.8.1",
                       "Routes==1.10.3",
                       "Paste==1.7.3.1",
+                      "pylibmc"
                       ],
     # For server installation:
     #  "ipython"

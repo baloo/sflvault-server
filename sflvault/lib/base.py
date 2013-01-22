@@ -41,6 +41,10 @@ from sflvault.common import VaultError
 
 from base64 import b64decode, b64encode
 
+mc = None
+
+def init_mc(mc_engine):
+    mc = mc_engine
 
 # Helper to return messages
 
@@ -56,39 +60,35 @@ def vaultMsg(success, message, dict=None):
 #
 # Session management functions
 #
-def _setup_sessions():
-    """DRY out set_session and get_session"""
-    if not hasattr(g, 'vaultSessions'):
-        g.vaultSessions = {}
-
 def set_session(authtok, value):
     """Sets in 'g.vaultSessions':
     {authtok1: {'username':  , 'timeout': datetime}, authtok2: {}..}
     
     """
-    _setup_sessions();
 
-    g.vaultSessions[authtok] = value;
-        
+    mc.set(authok, value)
+
 def get_session(authtok):
     """Return the values associated with a session"""
-    _setup_sessions();
 
-    if not g.vaultSessions.has_key(authtok):
+    content = mc.get(authtok)
+
+    if not content:
         return None
 
-    if not g.vaultSessions[authtok].has_key('timeout'):
-        g.vaultSessions[authtok]['timeout'] = datetime.now() + timedelta(0, SESSION_TIMEOUT)
+    if not content.has_key('timeout'):
+        content['timeout'] = datetime.now() + timedelta(0, SESSION_TIMEOUT)
+        mc.set(authok, content)
     
-    if g.vaultSessions[authtok]['timeout'] < datetime.now():
-        del(g.vaultSessions[authtok])
+    if content['timeout'] < datetime.now():
+        del mc[authok]
         return None
 
     if g.vaultSessions[authtok]['remote_addr'] != request.environ.get('REMOTE_ADDR', 'gibberish'):
-        del(g.vaultSessions[authtok])
+        del mc[authok]
         return None
 
-    return g.vaultSessions[authtok]
+    return content
 
 
 
