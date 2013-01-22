@@ -7,7 +7,7 @@ from pylons.error import handle_mako_error
 from sqlalchemy import engine_from_config
 from sflvault.model import init_model
 import pylibmc
-from lib.base import init_mc
+from sflvault.lib.base import init_mc
 
 import sflvault.lib.app_globals as app_globals
 import sflvault.lib.helpers
