@@ -77,6 +77,9 @@ def get_session(authtok):
 
     content = mc.engine.get(str(authtok))
 
+    import pprint
+    pprint.pprint(content)
+
     if not content:
         return None
 
