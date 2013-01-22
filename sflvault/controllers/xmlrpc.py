@@ -165,7 +165,7 @@ class XmlrpcController(XMLRPCController):
             newtok = b64encode(randfunc(32))
             set_session(newtok, {'username': username,
                                  'timeout': datetime.now() + timedelta(0, int(config['sflvault.vault.session_timeout'])),
-                                 'remote_addr': request.environ.get('REMOTE_ADDR', None),
+                                 'remote_addr': request.environ.get(config['remote.addr.key'], None),
                                  'user.is_admin': u.is_admin,
                                  'user_id': u.id
                                  })

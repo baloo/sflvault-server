@@ -77,9 +77,6 @@ def get_session(authtok):
 
     content = mc.engine.get(str(authtok))
 
-    import pprint
-    pprint.pprint(content)
-
     if not content:
         return None
 
@@ -91,7 +88,7 @@ def get_session(authtok):
         del mc.engine[authtok]
         return None
 
-    if content['remote_addr'] != request.environ.get('REMOTE_ADDR', 'gibberish'):
+    if content['remote_addr'] != request.environ.get(config['remote.addr.key'], 'gibberish'):
         del mc.engine[authtok]
         return None
 
